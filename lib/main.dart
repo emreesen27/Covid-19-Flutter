@@ -36,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
   SharedPreferences _shared;
   List<String> countryList = new List();
   String countryName,
-      countryFlag = "af",
+      countryFlag,
       totalConfirmed,
       totalDeaths,
       totalRecovered,
@@ -251,10 +251,10 @@ class _MyHomePageState extends State<MyHomePage> {
               items: countryList,
               selectedItem: countryName,
               onChanged: (value) {
-               setState(() {
-                 countryName = value;
-                 _setCountry(countryName);
-               });
+                setState(() {
+                  countryName = value;
+                  _setCountry(countryName);
+                });
               });
         },
       ),
@@ -263,7 +263,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _initShared() async {
     _shared = await SharedPreferences.getInstance();
-    if(_shared.getString('countryName') == null)
+    if (_shared.getString('countryName') == null)
       setState(() => countryName = 'Afghanistan');
     else
       setState(() => countryName = _shared.getString('countryName'));
