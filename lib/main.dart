@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_corona_app/text_field.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
@@ -32,8 +33,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController textController = new TextEditingController();
+  SharedPreferences _shared;
   List<String> countryList = new List();
-  String countryName = "Afghanistan",
+  String countryName,
       countryFlag = "af",
       totalConfirmed,
       totalDeaths,
@@ -46,6 +48,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Future _getJsonData() async {
     var _response = await http.get("https://api.covid19api.com/summary");
     return jsonDecode(_response.body);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initShared();
   }
 
   @override
@@ -72,8 +80,8 @@ class _MyHomePageState extends State<MyHomePage> {
             }
 
             for (int i = 0; i < countrySize; i++) {
-              if (snapshot.data['Countries'][i]['Country'].toString() == countryName) {
-                
+              if (snapshot.data['Countries'][i]['Country'].toString() ==
+                  countryName) {
                 totalConfirmed =
                     snapshot.data['Countries'][i]['TotalConfirmed'].toString();
                 totalDeaths =
@@ -235,19 +243,33 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         onPressed: () {
           showMaterialScrollPicker(
-            context: context,
-            backgroundColor: Color(0xffe7e7e7),
-            cancelText: "Cancel",
-            confirmText: "Ok",
-            title: "Pick Your Country",
-            items: countryList,
-            selectedItem: countryName,
-            onChanged: (value) => setState(
-              () => countryName = value,
-            ),
-          );
+              context: context,
+              backgroundColor: Color(0xffe7e7e7),
+              cancelText: "Cancel",
+              confirmText: "Ok",
+              title: "Pick Your Country",
+              items: countryList,
+              selectedItem: countryName,
+              onChanged: (value) {
+               setState(() {
+                 countryName = value;
+                 _setCountry(countryName);
+               });
+              });
         },
       ),
     );
+  }
+
+  _initShared() async {
+    _shared = await SharedPreferences.getInstance();
+    if(_shared.getString('countryName') == null)
+      setState(() => countryName = 'Afghanistan');
+    else
+      setState(() => countryName = _shared.getString('countryName'));
+  }
+
+  _setCountry(String countryName) async {
+    await _shared.setString('countryName', countryName);
   }
 }
