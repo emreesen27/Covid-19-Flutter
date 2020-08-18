@@ -35,6 +35,13 @@ dev_dependencies:
   http:
   cached_network_image: ^2.0.0
   flutter_material_pickers: ^1.7.1
+  shared_preferences: ^0.5.8
+  flutter_launcher_icons: ^0.7.3
+
+flutter_icons:
+    android: true
+    ios: true
+    image_path: "assets/launcher.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
