@@ -128,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           children: [
                             CachedNetworkImage(
                               imageUrl:
-                                  "https://www.countryflags.io/$countryFlag/shiny/64.png",
+                                  'https://www.countryflags.io/$countryFlag/shiny/64.png',
                               imageBuilder: (context, imageProvider) =>
                                   Container(
                                 width: 90,
@@ -249,9 +249,9 @@ class _MyHomePageState extends State<MyHomePage> {
           showMaterialScrollPicker(
               context: context,
               backgroundColor: Color(0xffe7e7e7),
-              cancelText: "Cancel",
-              confirmText: "Ok",
-              title: "Pick Your Country",
+              cancelText: 'Cancel',
+              confirmText: 'Ok',
+              title: 'Pick Your Country',
               items: countryList,
               selectedItem: countryName,
               onChanged: (value) {
