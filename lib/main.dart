@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_corona_app/text_field.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
@@ -54,6 +55,9 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _initShared();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
   }
 
   @override
