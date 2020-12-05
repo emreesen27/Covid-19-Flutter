@@ -33,18 +33,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  TextEditingController textController = new TextEditingController();
   SharedPreferences _shared;
-  List<String> countryList = new List();
-  String countryName,
-      countryFlag,
-      totalConfirmed,
-      totalDeaths,
-      totalRecovered,
-      newConfirmed,
-      newDeaths,
-      newRecovered,
-      updateDate;
+  List<String> _countryList = new List();
+  String _countryName,
+      _countryFlag,
+      _totalConfirmed,
+      _totalDeaths,
+      _totalRecovered,
+      _newConfirmed,
+      _newDeaths,
+      _newRecovered,
+      _updateDate;
 
   Future _getJsonData() async {
     var _response = await http.get("https://api.covid19api.com/summary");
@@ -80,29 +79,30 @@ class _MyHomePageState extends State<MyHomePage> {
             final int countrySize = (snapshot.data['Countries'] as List).length;
 
             for (int i = 0; i < countrySize; i++) {
-              countryList.add(snapshot.data['Countries'][i]['Country']);
+              _countryList.add(snapshot.data['Countries'][i]['Country']);
             }
 
             for (int i = 0; i < countrySize; i++) {
               if (snapshot.data['Countries'][i]['Country'].toString() ==
-                  countryName) {
-                totalConfirmed =
+                  _countryName) {
+                _totalConfirmed =
                     snapshot.data['Countries'][i]['TotalConfirmed'].toString();
-                totalDeaths =
+                _totalDeaths =
                     snapshot.data['Countries'][i]['TotalDeaths'].toString();
-                totalRecovered =
+                _totalRecovered =
                     snapshot.data['Countries'][i]['TotalRecovered'].toString();
-                newConfirmed =
+                _newConfirmed =
                     snapshot.data['Countries'][i]['NewConfirmed'].toString();
-                newDeaths =
+                _newDeaths =
                     snapshot.data['Countries'][i]['NewDeaths'].toString();
-                newRecovered =
+                _newRecovered =
                     snapshot.data['Countries'][i]['NewRecovered'].toString();
 
-                countryFlag =
-                    snapshot.data['Countries'][i]['CountryCode'].toString();
+                _countryFlag = snapshot.data['Countries'][i]['CountryCode']
+                    .toString()
+                    .toLowerCase();
 
-                updateDate = snapshot.data['Countries'][i]['Date']
+                _updateDate = snapshot.data['Countries'][i]['Date']
                     .toString()
                     .substring(0, 10);
               }
@@ -126,28 +126,31 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            CachedNetworkImage(
-                              imageUrl:
-                                  'https://www.countryflags.io/$countryFlag/shiny/64.png',
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                width: 90,
-                                height: 90,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.fill,
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: CachedNetworkImage(
+                                imageUrl:
+                                    'https://flagcdn.com/56x42/$_countryFlag.png',
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  width: 60,
+                                  height: 45,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.fill,
+                                    ),
                                   ),
                                 ),
+                                placeholder: (context, url) => Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
                               ),
-                              placeholder: (context, url) => Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                              errorWidget: (context, url, error) =>
-                                  Icon(Icons.error),
                             ),
                             Text(
-                              '$countryName'.toUpperCase(),
+                              '$_countryName'.toUpperCase(),
                               style: TextStyle(
                                 fontSize: 18,
                                 color: Colors.black87,
@@ -172,16 +175,16 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: [
                           textField(
                             desc: 'Total Confirmed :',
-                            value: '$totalConfirmed',
+                            value: '$_totalConfirmed',
                             color: Color(0xff3498db),
                           ),
                           textField(
                               desc: 'Total Deaths :',
-                              value: '$totalDeaths',
+                              value: '$_totalDeaths',
                               color: Color(0xffd72323)),
                           textField(
                               desc: 'Total Recovered :',
-                              value: '$totalRecovered',
+                              value: '$_totalRecovered',
                               color: Color(0xff30e3ca)),
                         ],
                       ),
@@ -197,17 +200,17 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: [
                           textField(
                             desc: 'New Confirmed :',
-                            value: '$newConfirmed',
+                            value: '$_newConfirmed',
                             color: Color(0xff3498db),
                           ),
                           textField(
                             desc: 'New Deaths :',
-                            value: '$newDeaths',
+                            value: '$_newDeaths',
                             color: Color(0xffd72323),
                           ),
                           textField(
                             desc: 'New Recovered :',
-                            value: '$newRecovered',
+                            value: '$_newRecovered',
                             color: Color(0xff30e3ca),
                           ),
                         ],
@@ -228,7 +231,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         bottom: 3.0,
                       ),
                       child: Text(
-                        'Last Update : $updateDate',
+                        'Last Update : $_updateDate',
                         style: TextStyle(color: Colors.black87),
                       ),
                     ),
@@ -252,12 +255,12 @@ class _MyHomePageState extends State<MyHomePage> {
               cancelText: 'Cancel',
               confirmText: 'Ok',
               title: 'Pick Your Country',
-              items: countryList,
-              selectedItem: countryName,
+              items: _countryList,
+              selectedItem: _countryName,
               onChanged: (value) {
                 setState(() {
-                  countryName = value;
-                  _setCountry(countryName);
+                  _countryName = value;
+                  _setCountry(_countryName);
                 });
               });
         },
@@ -268,9 +271,9 @@ class _MyHomePageState extends State<MyHomePage> {
   _initShared() async {
     _shared = await SharedPreferences.getInstance();
     if (_shared.getString('countryName') == null)
-      setState(() => countryName = 'Afghanistan');
+      setState(() => _countryName = 'Afghanistan');
     else
-      setState(() => countryName = _shared.getString('countryName'));
+      setState(() => _countryName = _shared.getString('countryName'));
   }
 
   _setCountry(String countryName) async {
