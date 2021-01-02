@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_corona_app/text_field.dart';
@@ -34,7 +33,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   SharedPreferences _shared;
-  List<String> _countryList = new List();
+  List<String> _countryList = List();
   String _countryName,
       _countryFlag,
       _totalConfirmed,
