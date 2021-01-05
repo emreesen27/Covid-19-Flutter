@@ -1,4 +1,7 @@
 # Covid-19 Flutter App
+
+#### This project is made using Flutter framework.In this app you can check the daily count of covid-19 cases of every country.
+
 ![info-gif](outputs/gif.gif)
 
 # Libraries
